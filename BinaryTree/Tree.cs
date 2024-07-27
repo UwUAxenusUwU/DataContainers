@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BinaryTree
 {
-    internal class Tree
+    internal class Tree:IEnumerator, IEnumerable
     {
         public class Element
         {
@@ -32,9 +34,43 @@ namespace BinaryTree
         }
         ~Tree()
         {
+            Clear(ref Root);
+            Root = null;
             //Console.WriteLine($"Tdstr:\t{GetHashCode()}");
         }
 
+        public void Clear()
+        {
+            Clear(ref Root);
+        }
+        void Clear(ref Element Root)
+        {
+            if(Root == null)return;
+            Clear(ref Root.pLeft);
+            Clear(ref Root.pRight); 
+            Root = null;
+            System.GC.WaitForPendingFinalizers();
+        }
+        public void Add(int Data)
+        {
+            Insert(Data, Root);
+        }
+        public IEnumerator GetEnumerator()
+        {
+            return this;
+        }
+        public object Current
+        {
+            get => Root.Data;
+        }
+        public bool MoveNext()
+        {
+            return true;
+        }
+        public void Reset()
+        {
+            
+        }
         public void Insert(int Data)
         {
             Insert(Data, Root);
@@ -99,6 +135,19 @@ namespace BinaryTree
         public double Avg()
         {
             return (double)Sum(Root)/Count(Root);
+        }
+        public int Depth()
+        {
+            return Depth(Root);
+        }
+        int Depth(Element Root)
+        {
+            if (Root == null) return 0;
+            //else return Depth(Root.pLeft) + 1 > Depth(Root.pRight) + 1? Depth(Root.pLeft) + 1 : Depth(Root.pRight) + 1;
+            int lDepth = Depth(Root.pLeft) + 1;
+            int rDepth = Depth(Root.pRight) + 1;
+            return Math.Max(lDepth, rDepth);
+            
         }
         public void Print()
         {

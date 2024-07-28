@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace BinaryTree
 {
-    internal class TreePerformance
+    internal class TreePerformance<T>
     {
-        public delegate int Method();
+        public delegate T Method();
         public static void Measure(string message, Method method)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            int value = method();
+            T value = method();
             sw.Stop();
             Console.WriteLine($"{message}: {value}; time requared {sw.Elapsed.TotalMilliseconds} ms");
-        }
+        }        
+
     }
 }
